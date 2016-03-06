@@ -1,6 +1,8 @@
 package in.grappes.sampleapp.Activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView feedRecycler;
     VerticalFeedAdapter feedAdapter;
 
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showList() {
         try {
+
+            showProgressDialog();
             JSONArray categoryArray = new JSONArray(loadJSONFromAsset());
             List<Category> categoryList = new ArrayList<>();
             for(int i=0;i<categoryArray.length();i++)
@@ -79,7 +84,26 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                });
 
+            }
+        },2000);
+
+    }
+
+    private void showProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("loading...");
+        progressDialog.show();
     }
 
     private void setAdapterToList(List<Category> categoryList) {

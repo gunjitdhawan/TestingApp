@@ -147,6 +147,7 @@ public class VerticalFeedAdapter extends RecyclerView.Adapter {
         }
     }
 
+
     @Override
     public int getItemCount() {
         return feedList.size();
